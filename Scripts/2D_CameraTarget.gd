@@ -7,27 +7,27 @@ var drag_origin = Vector2.ZERO
 
 func _physics_process(delta):
 	HandleWASDMovement(delta)
-	HandleEdgeMovement(delta)
+	#HandleEdgeMovement(delta)
 
 func _input(event):
 	HandleMouseDrag(event)
 	HandleMouseZoom(event)
 
-func HandleEdgeMovement(delta):
-	#Handle Edge of Screen Movement
-	var viewport_rect = get_viewport_rect()
-	var mouse_pos = get_viewport().get_mouse_position()
-
-	var edge_threshold = 25  # Pixels from the edge to start moving
-
-	if mouse_pos.x < edge_threshold:
-		position.x -= speed * delta
-	if mouse_pos.x > viewport_rect.size.x - edge_threshold:
-		position.x += speed * delta
-	if mouse_pos.y < edge_threshold:
-		position.y -= speed * delta
-	if mouse_pos.y > viewport_rect.size.y - edge_threshold:
-		position.y += speed * delta
+#func HandleEdgeMovement(delta):
+	##Handle Edge of Screen Movement
+	#var viewport_rect = get_viewport_rect()
+	#var mouse_pos = get_viewport().get_mouse_position()
+#
+	#var edge_threshold = 25  # Pixels from the edge to start moving
+#
+	#if mouse_pos.x < edge_threshold:
+		#position.x -= speed * delta
+	#if mouse_pos.x > viewport_rect.size.x - edge_threshold:
+		#position.x += speed * delta
+	#if mouse_pos.y < edge_threshold:
+		#position.y -= speed * delta
+	#if mouse_pos.y > viewport_rect.size.y - edge_threshold:
+		#position.y += speed * delta
 
 func HandleWASDMovement(delta):
 	var movement = Vector2.ZERO
