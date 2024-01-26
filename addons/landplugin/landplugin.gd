@@ -40,7 +40,7 @@ func _exit_tree():
 func _on_draw_button_pressed():
 	print("Pressed")
 	if land_parcel_instance == null:
-		land_parcel_instance = land_parcel_scene.instance()
+		land_parcel_instance = land_parcel_scene.instantiate()
 		var current_scene = get_editor_interface().get_edited_scene_root()
 
 		# Find the "LandParcels" node within the current scene
