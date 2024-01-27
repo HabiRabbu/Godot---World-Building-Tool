@@ -8,6 +8,7 @@ var dock_panel: PanelContainer
 var draw_button: Button
 
 func _enter_tree():
+	set_input_event_forwarding_always_enabled()
 	# Create the dock panel container
 	dock_panel = PanelContainer.new()
 	dock_panel.name = "Land Parcel Editor"
@@ -39,50 +40,69 @@ func _exit_tree():
 
 func _on_draw_button_pressed():
 	print("Pressed")
-	if land_parcel_instance == null:
+	if not drawing:
 		land_parcel_instance = land_parcel_scene.instantiate()
 		var current_scene = get_editor_interface().get_edited_scene_root()
+		var land_parcels_node = current_scene.find_child("LandParcels", true, false)
+		land_parcels_node.add_child(land_parcel_instance)
+		land_parcel_instance.set_owner(current_scene)
 
-		# Find the "LandParcels" node within the current scene
-		var land_parcels_node = current_scene.find_node("LandParcels", true, false)
-		if land_parcels_node:
-			land_parcels_node.add_child(land_parcel_instance)
-			drawing = true
-			draw_button.text = "Finish Drawing"
-			print("Start drawing the land parcel.")
-		else:
-			print("Error: 'LandParcels' node not found in the current scene.")
+		var collision_polygon = land_parcel_instance.find_child("CollisionPolygon2D")
+		var polygon2d = land_parcel_instance.find_child("Polygon2D")
+		polygon2d.polygon = PackedVector2Array()
+		collision_polygon.polygon = PackedVector2Array()
+
+		drawing = true
+		draw_button.text = "Finish Drawing"
+		print("Start drawing the land parcel.")
 	else:
 		drawing = false
 		draw_button.text = "Draw Land Parcel"
+		#land_parcel_instance.queue_free()  # Properly remove the instance when finished drawing
+		#land_parcel_instance = null
 		print("Finished drawing the land parcel.")
-		land_parcel_instance = null
 
+func _handles(object):
+	return true
 
-func forward_canvas_gui_input(event):
+func _forward_canvas_gui_input(event) -> bool:
 	if not drawing or land_parcel_instance == null:
 		return false
 
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		var local_pos = land_parcel_instance.to_local(get_editor_interface().get_editor_viewport().get_canvas_transform().affine_inverse().xform(event.global_position))
+		#print("Canvas GUI input received:", event)
+		# Directly use event.position if applicable, or adjust as needed based on your context
+		var editor_viewport = get_editor_interface().get_editor_viewport_2d()
+		var global_mouse_position = editor_viewport.get_mouse_position()
+		var local_pos = land_parcel_instance.to_local(global_mouse_position)
 		_add_point_to_land_parcel(local_pos)
-		return true
+		return true  # Consuming the event
 
-	return false
+
+	return false  # Forwarding the event if not processed
+
 
 func _add_point_to_land_parcel(position: Vector2):
-	var collision_polygon = land_parcel_instance.get_node("CollisionPolygon2D")
-	var polygon2d = land_parcel_instance.get_node("Polygon2D")
+	var undo_redo = get_undo_redo()  # Get the editor's UndoRedo manager
+
+	var collision_polygon = land_parcel_instance.find_child("CollisionPolygon2D", true, false)
+	var polygon2d = land_parcel_instance.find_child("Polygon2D", true, false)
 
 	if collision_polygon and polygon2d:
-		# Append the new point
-		var points = collision_polygon.polygon
-		points.append(position)
-		collision_polygon.polygon = points
-		polygon2d.polygon = points
+		undo_redo.create_action("Add LandParcel Point")
+		var points_polygon2d = polygon2d.polygon.duplicate()
+		var points_collision_polygon = collision_polygon.polygon.duplicate()
+		points_polygon2d.append(position)
+		points_collision_polygon.append(position)
 
-		# Update the editor for visual feedback
-		polygon2d.update()
+		# Register the change with undo_redo for both nodes
+		undo_redo.add_do_method(polygon2d, "set", "polygon", points_polygon2d)
+		undo_redo.add_do_method(collision_polygon, "set", "polygon", points_collision_polygon)
+		undo_redo.add_undo_method(polygon2d, "set", "polygon", polygon2d.polygon)
+		undo_redo.add_undo_method(collision_polygon, "set", "polygon", collision_polygon.polygon)
+
+		undo_redo.commit_action()
+
 		print("Point added to LandParcel's shape: ", position)
 	else:
 		print("Error: CollisionPolygon2D or Polygon2D not found in LandParcel scene.")
