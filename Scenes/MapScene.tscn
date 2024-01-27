@@ -1,7 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://c5a02i5u3vyjg"]
+[gd_scene load_steps=2 format=3 uid="uid://c5a02i5u3vyjg"]
 
 [ext_resource type="PackedScene" uid="uid://cwt68fh0xsyb" path="res://Scenes/Camera.tscn" id="1_iovlh"]
-[ext_resource type="PackedScene" uid="uid://bcua26k3lfqoa" path="res://Scenes/LandParcel.tscn" id="2_ndbry"]
 
 [node name="2D_GameMap" type="Node2D"]
 
@@ -14,15 +13,3 @@ polygon = PackedVector2Array(67.6169, 28.245, 1053.63, 28.245, 1053.63, 582.875,
 position = Vector2(960, 538)
 
 [node name="LandParcels" type="Node2D" parent="."]
-
-[node name="LandParcel" parent="LandParcels" instance=ExtResource("2_ndbry")]
-position = Vector2(36, 19)
-scale = Vector2(8.12, 7.28)
-
-[node name="LandParcel2" parent="LandParcels" instance=ExtResource("2_ndbry")]
-position = Vector2(1292, 19)
-scale = Vector2(8.12, 7.28)
-
-[node name="LandParcel3" parent="LandParcels" instance=ExtResource("2_ndbry")]
-position = Vector2(2528, 19)
-scale = Vector2(8.12, 7.28)

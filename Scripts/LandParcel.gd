@@ -1,8 +1,8 @@
 extends Node2D
 
-var landOwner: String = "none"
-var cost: int = 1000
-var details: String = ""
+@export var landOwner: String = "none"
+@export var cost: int = 1000
+@export var details: String = ""
 
 func _ready():
 	var area2D = $Area2D

@@ -44,13 +44,16 @@ func _on_draw_button_pressed():
 		land_parcel_instance = land_parcel_scene.instantiate()
 		var current_scene = get_editor_interface().get_edited_scene_root()
 		var land_parcels_node = current_scene.find_child("LandParcels", true, false)
-		land_parcels_node.add_child(land_parcel_instance)
-		land_parcel_instance.set_owner(current_scene)
+		land_parcels_node.add_child(land_parcel_instance, true)
 
 		var collision_polygon = land_parcel_instance.find_child("CollisionPolygon2D")
 		var polygon2d = land_parcel_instance.find_child("Polygon2D")
 		polygon2d.polygon = PackedVector2Array()
 		collision_polygon.polygon = PackedVector2Array()
+
+		land_parcel_instance.set_owner(current_scene)
+		land_parcel_instance.owner = get_editor_interface().get_edited_scene_root()
+		set_owner_recursively(land_parcel_instance, get_editor_interface().get_edited_scene_root())
 
 		drawing = true
 		draw_button.text = "Finish Drawing"
@@ -61,6 +64,12 @@ func _on_draw_button_pressed():
 		#land_parcel_instance.queue_free()  # Properly remove the instance when finished drawing
 		#land_parcel_instance = null
 		print("Finished drawing the land parcel.")
+
+func set_owner_recursively(node, owner):
+	node.owner = owner
+	print("I'm setting recursively")
+	for child in node.get_children():
+		set_owner_recursively(child, owner)
 
 func _handles(object):
 	return true
@@ -83,27 +92,34 @@ func _forward_canvas_gui_input(event) -> bool:
 
 
 func _add_point_to_land_parcel(position: Vector2):
-	var undo_redo = get_undo_redo()  # Get the editor's UndoRedo manager
+	var undo_redo_manager = get_undo_redo()  # Obtain the EditorUndoRedoManager
 
 	var collision_polygon = land_parcel_instance.find_child("CollisionPolygon2D", true, false)
 	var polygon2d = land_parcel_instance.find_child("Polygon2D", true, false)
 
 	if collision_polygon and polygon2d:
-		undo_redo.create_action("Add LandParcel Point")
-		var points_polygon2d = polygon2d.polygon.duplicate()
-		var points_collision_polygon = collision_polygon.polygon.duplicate()
-		points_polygon2d.append(position)
-		points_collision_polygon.append(position)
+		# Start creating an action
+		undo_redo_manager.create_action("Add LandParcel Point")
 
-		# Register the change with undo_redo for both nodes
-		undo_redo.add_do_method(polygon2d, "set", "polygon", points_polygon2d)
-		undo_redo.add_do_method(collision_polygon, "set", "polygon", points_collision_polygon)
-		undo_redo.add_undo_method(polygon2d, "set", "polygon", polygon2d.polygon)
-		undo_redo.add_undo_method(collision_polygon, "set", "polygon", collision_polygon.polygon)
+		# Duplicate current polygons for the undo action
+		var undo_polygon2d_points = polygon2d.polygon.duplicate()
+		var undo_collision_polygon_points = collision_polygon.polygon.duplicate()
 
-		undo_redo.commit_action()
+		# Prepare new points for the do action
+		var new_polygon2d_points = undo_polygon2d_points.duplicate()
+		var new_collision_polygon_points = undo_collision_polygon_points.duplicate()
+		new_polygon2d_points.append(position)
+		new_collision_polygon_points.append(position)
+
+		# Register the undo and do actions
+		undo_redo_manager.add_undo_property(polygon2d, "polygon", undo_polygon2d_points)
+		undo_redo_manager.add_undo_property(collision_polygon, "polygon", undo_collision_polygon_points)
+		undo_redo_manager.add_do_property(polygon2d, "polygon", new_polygon2d_points)
+		undo_redo_manager.add_do_property(collision_polygon, "polygon", new_collision_polygon_points)
+
+		# Commit the action
+		undo_redo_manager.commit_action()
 
 		print("Point added to LandParcel's shape: ", position)
 	else:
 		print("Error: CollisionPolygon2D or Polygon2D not found in LandParcel scene.")
-
