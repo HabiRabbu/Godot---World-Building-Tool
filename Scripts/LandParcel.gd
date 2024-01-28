@@ -1,9 +1,10 @@
 extends Node2D
 
 @export var landOwner: String = "none"
-@export var cost: int = 1000
+@export var cost: int = 0
 @export var details: String = ""
 @export var landArea = 0
+@export var pricePerArea = 0.01
 
 func _ready():
 	var area2D = $Area2D
@@ -14,7 +15,7 @@ func _ready():
 	var polygon_node = area2D.get_node("Polygon2D") as Polygon2D
 	if polygon_node:
 		landArea = int(calculate_polygon_area(polygon_node))
-		print("Area of the polygon: ", landArea)
+		cost = int(landArea * pricePerArea)
 
 func _on_Area2D_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
