@@ -7,9 +7,17 @@
 [node name="Polygon2D_MapBase" type="Polygon2D" parent="."]
 position = Vector2(-1216, -570)
 scale = Vector2(16.2721, 16.2721)
-polygon = PackedVector2Array(67.6169, 28.245, 1053.63, 28.245, 1053.63, 582.875, 67.6169, 582.875, 67.6169, 70.0322, 67.6169, 56.9259, 67.6169, 41.4742)
+color = Color(0.65098, 0.905882, 0.690196, 1)
+polygon = PackedVector2Array(67.6169, 28.245, 1053.63, 28.245, 1053.63, 582.875, 67.6169, 582.875)
 
 [node name="CameraScene" parent="." instance=ExtResource("1_iovlh")]
 position = Vector2(960, 538)
 
 [node name="LandParcels" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Trees" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Mountains" type="Node2D" parent="."]
+unique_name_in_owner = true

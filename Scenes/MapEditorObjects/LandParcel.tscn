@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://bcua26k3lfqoa"]
+
+[ext_resource type="Script" path="res://Scripts/LandParcel.gd" id="1_bria5"]
+
+[node name="LandParcel" type="Node2D"]
+script = ExtResource("1_bria5")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="Area2D"]
+color = Color(1, 1, 1, 0.184314)
+polygon = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
+uv = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+polygon = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)

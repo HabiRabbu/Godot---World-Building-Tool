@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bcnwv4ht2rpxe"]
+
+[node name="Mountain" type="Node2D"]
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="Area2D"]
+color = Color(0.505882, 0.505882, 0.505882, 1)
+antialiased = true
+texture_scale = Vector2(0.1, 0.1)
+polygon = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
+uv = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
+
+[node name="InnerPolygon2D" type="Polygon2D" parent="Area2D"]
+color = Color(0.505882, 0.505882, 0.505882, 1)
+antialiased = true
+texture_scale = Vector2(0.1, 0.1)
+polygon = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
+uv = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+polygon = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
