@@ -1,17 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://c5a02i5u3vyjg"]
+[gd_scene load_steps=4 format=3 uid="uid://c5a02i5u3vyjg"]
 
 [ext_resource type="PackedScene" uid="uid://cwt68fh0xsyb" path="res://Scenes/Camera.tscn" id="1_iovlh"]
+[ext_resource type="PackedScene" uid="uid://cciatg30dfkdu" path="res://Scenes/NPCCharacter.tscn" id="2_u1aof"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_jx214"]
+vertices = PackedVector2Array(19990, 19990, 10, 19990, 10, 10, 19990, 10)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(0, 0, 20000, 0, 20000, 20000, 0, 20000)])
+source_geometry_group_name = &"navigation_polygon_source_group"
 
 [node name="2D_GameMap" type="Node2D"]
 
-[node name="Polygon2D_MapBase" type="Polygon2D" parent="."]
-position = Vector2(-1216, -570)
-scale = Vector2(16.2721, 16.2721)
-color = Color(0.65098, 0.905882, 0.690196, 1)
-polygon = PackedVector2Array(67.6169, 28.245, 1053.63, 28.245, 1053.63, 582.875, 67.6169, 582.875)
-
-[node name="CameraScene" parent="." instance=ExtResource("1_iovlh")]
-position = Vector2(960, 538)
+[node name="Camera_Scene" parent="." instance=ExtResource("1_iovlh")]
 
 [node name="LandParcels" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -21,3 +21,22 @@ unique_name_in_owner = true
 
 [node name="Mountains" type="Node2D" parent="."]
 unique_name_in_owner = true
+
+[node name="NPCs" type="Node2D" parent="."]
+unique_name_in_owner = true
+z_index = 1
+
+[node name="NPC" parent="NPCs" instance=ExtResource("2_u1aof")]
+position = Vector2(76, 59)
+scale = Vector2(5, 5)
+
+[node name="MapObjects" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="MapObjects"]
+navigation_polygon = SubResource("NavigationPolygon_jx214")
+
+[node name="Polygon2D_MapBase" type="Polygon2D" parent="MapObjects"]
+color = Color(0.65098, 0.905882, 0.690196, 1)
+antialiased = true
+polygon = PackedVector2Array(0, 0, 20000, 0, 20000, 20000, 0, 20000)

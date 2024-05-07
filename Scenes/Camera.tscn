@@ -5,6 +5,7 @@
 [node name="Camera" type="Node2D"]
 
 [node name="2D_CameraTarget" type="Node2D" parent="."]
+position = Vector2(960, 540)
 script = ExtResource("1_ppbdt")
 
 [node name="Camera2D_PlayerCamera" type="Camera2D" parent="2D_CameraTarget"]

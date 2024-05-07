@@ -23,6 +23,12 @@ func handle_draw_button(draw_button: Button):
 	else:
 		drawing = false
 		draw_button.text = "Draw Mountains"
+
+		var polygon2d = mountain_instance.find_child("Polygon2D", true, false)
+		var innerPolygon2d = mountain_instance.find_child("InnerPolygon2D", true, false)
+
+		#Some sort of stuff here
+
 		finalise_mountain_shape()
 		print("Finished drawing the Mountains.")
 
@@ -106,3 +112,4 @@ func finalise_mountain_shape():
 			print("Error: Polygon2D not found in Tree instance.")
 		if not collision_polygon:
 			print("Error: CollisionPolygon2D not found in Tree instance.")
+

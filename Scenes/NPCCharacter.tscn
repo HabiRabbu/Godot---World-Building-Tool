@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://cciatg30dfkdu"]
+
+[ext_resource type="Texture2D" uid="uid://lhf1t34ll33i" path="res://Sprites/circle.svg" id="1_x7t6y"]
+[ext_resource type="Script" path="res://Scripts/NPCs/NPC_Stats.gd" id="2_ooqac"]
+[ext_resource type="Script" path="res://Scripts/NPCs/UtilityAI_Brain.gd" id="3_dwuiw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_q6bhl"]
+radius = 4.0
+
+[node name="NPC" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CircleShape2D_q6bhl")
+debug_color = Color(1, 1, 1, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.0160522, 0.0160522)
+texture = ExtResource("1_x7t6y")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="NPC_Stats" type="Node2D" parent="."]
+script = ExtResource("2_ooqac")
+
+[node name="UtilityAI_Brain" type="Node2D" parent="."]
+script = ExtResource("3_dwuiw")
